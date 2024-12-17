@@ -1,5 +1,3 @@
-This simple project is made for dmlab test exercise.
-
 The project is a simple homepage, which visualises champions League rounds and makes it more easy to guess the result of a champions league match.
 
 The homepage collects basic statistics of the two teams playing the match, and the available results of the two teams and on the right hand side all matches are displayed in the specific round (and the results as well if available).
