@@ -1,0 +1,43 @@
+This simple project is made for dmlab test exercise.
+
+The project is a simple homepage, which visualises champions League rounds and makes it more easy to guess the result of a champions league match.
+
+The homepage collects basic statistics of the two teams playing the match, and the available results of the two teams and on the right hand side all matches are displayed in the specific round (and the results as well if available).
+
+Installation steps:
+
+1. A Free tier AWS account should be created
+2. A Virtual Private Cloud should be created
+4. A Bucket should be created where the index.html file should be uploaded from \statis\index.html
+3. Inside the virtual private cloud, an EC2 instance should be created, with Amazon Linux installed on it
+5. An Amazon RDS database should be created, MySQL should be chosen to database type
+5a. All inbound and outbound traffic should be enabled to this MySQL database (I know this is a security hole, but in this way I can connect from a local machine to the Amazon RDS database)
+5b. MySQL Workbench should be installed on local machine
+5c. edw_sport schema should be created and DDL/DML scripts should be run which pupolate (/mysql/CL_populate.sql)
+6. On the EC2 instance we should install nginx web server
+6a. The dynamic version of index.html (dynamic/index.html) should be uploaded to /usr/share/nginx/html/
+7. A lambda function (python) should be created by uploading zip file in dynamic/lambda_function.zip
+7a. lambda_function is contained in lambda_function.py
+7b. However the zip file also contains pymsql which is used for creating a connection for mysql database
+8. Proper security groups should be created by enabling traffic between the RDS database and lambda funcion and lambda function and EC2 instance and the internet and the EC2 instance
+
+Results:
+
+Static version:
+
+Link: https://quantum-aws-champions-league.s3.eu-north-1.amazonaws.com/index.html
+
+The static version of the home page, which visualises the second match of the eighth round (PSV - Liverpool) of 2024/2025 champions league. On the left hand side PSV statistics can be seen, on the right side Liverpool statistics can be seen
+
+Dynamic version:
+
+Link: https://ec2-13-60-32-141.eu-north-1.compute.amazonaws.com/
+
+In this version (not yet finalised) round number and match number can be selected, therefore the home page dynamic. 
+
+Known bugs/issues: 
+
+  Unfortunately there are issues with the lambda function which I wasn't able to resolve.
+  The Amazon Cloud architecture creation  very likely can be automatized with AWS CloudFormation
+  The results can be queried with RAPID API (https://rapidapi.com/heisenbug/api/champions-league-live-scores), this is also not yet implemented, but should be implemented with lambda function as well
+

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Champions League Match Analysis</title>
+    <style>
+        /* Styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            padding: 20px;
+            justify-content: space-between;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 32%;
+        }
+        h2, h3 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+        .form-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        select, button {
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <label for="roundSelect">Select Round:</label>
+        <select id="roundSelect">
+            <option value="1">Round 1</option>
+            <option value="2">Round 2</option>
+            <option value="3">Round 3</option>
+            <option value="4">Round 4</option>
+            <option value="5">Round 5</option>
+            <option value="6">Round 6</option>
+            <option value="7">Round 7</option>
+            <option value="8">Round 8</option>
+        </select>
+
+        <label for="matchSelect">Select Match Number:</label>
+        <select id="matchSelect">
+            <option value="1">Match 1</option>
+            <option value="2">Match 2</option>
+            <option value="3">Match 3</option>
+            <option value="4">Match 4</option>
+            <option value="5">Match 5</option>
+            <option value="6">Match 6</option>
+            <option value="7">Match 7</option>
+            <option value="8">Match 8</option>
+            <option value="9">Match 9</option>
+            <option value="10">Match 10</option>
+            <option value="11">Match 11</option>
+            <option value="12">Match 12</option>
+            <option value="13">Match 13</option>
+            <option value="14">Match 14</option>
+            <option value="15">Match 15</option>
+            <option value="16">Match 16</option>
+            <option value="17">Match 17</option>
+            <option value="18">Match 18</option>
+        </select>
+
+        <button onclick="fetchMatchData()">Fetch Data</button>
+    </div>
+
+    <div class="container">
+        <!-- Left Section (Team 1) -->
+        <div class="section" id="team1Section">
+            <h2 id="team1Name">Team 1</h2>
+            <h3>Team Statistics</h3>
+            <table id="team1Stats">
+                <!-- Team stats will be populated here -->
+            </table>
+
+            <h3>Match Results</h3>
+            <table id="team1MatchResults">
+                <!-- Match results will be populated here -->
+            </table>
+        </div>
+
+        <!-- Center Section (Team 2) -->
+        <div class="section" id="team2Section">
+            <h2 id="team2Name">Team 2</h2>
+            <h3>Team Statistics</h3>
+            <table id="team2Stats">
+                <!-- Team stats will be populated here -->
+            </table>
+
+            <h3>Match Results</h3>
+            <table id="team2MatchResults">
+                <!-- Match results will be populated here -->
+            </table>
+        </div>
+
+        <!-- Right Section (Champions League Round Matches) -->
+        <div class="section" id="right">
+            <h2>Champions League Round Matches</h2>
+            <table id="roundMatches">
+                <!-- Round matches will be populated here -->
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function fetchMatchData() {
+            const round = document.getElementById("roundSelect").value;
+            const matchNumber = document.getElementById("matchSelect").value;
+
+            // API endpoint for the Lambda function (replace with your actual endpoint)
+            const apiUrl = `https://ssjj37n0gf.execute-api.eu-north-1.amazonaws.com/dev/fetch-match-data?round=${round}&matchNumber=${matchNumber}`;
+
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (data) {
+                populateTables(data);
+            }
+        }
+
+        function populateTables(data) {
+            // Clear previous data
+            document.getElementById("team1Stats").innerHTML = "";
+            document.getElementById("team2Stats").innerHTML = "";
+            document.getElementById("team1MatchResults").innerHTML = "";
+            document.getElementById("team2MatchResults").innerHTML = "";
+            document.getElementById("roundMatches").innerHTML = "";
+
+            // Populate Team 1 and Team 2 stats
+            const team1Stats = data.team1Stats;
+            const team2Stats = data.team2Stats;
+            const roundMatches = data.roundMatches;
+
+            // Set team names dynamically
+            document.getElementById("team1Name").innerText = data.team1Name;
+            document.getElementById("team2Name").innerText = data.team2Name;
+
+            // Team 1 statistics
+            const team1StatsTable = document.getElementById("team1Stats");
+            for (const key in team1Stats) {
+                const row = team1StatsTable.insertRow();
+                row.insertCell(0).innerText = key;
+                row.insertCell(1).innerText = team1Stats[key];
+            }
+
+            // Team 2 statistics
+            const team2StatsTable = document.getElementById("team2Stats");
+            for (const key in team2Stats) {
+                const row = team2StatsTable.insertRow();
+                row.insertCell(0).innerText = key;
+                row.insertCell(1).innerText = team2Stats[key];
+            }
+
+            // Round Matches
+            const roundMatchesTable = document.getElementById("roundMatches");
+            roundMatches.forEach(match => {
+                const row = roundMatchesTable.insertRow();
+                row.insertCell(0).innerText = match.match_number;
+                row.insertCell(1).innerText = match.team_1;
+                row.insertCell(2).innerText = match.team_2;
+                row.insertCell(3).innerText = match.result;
+            });
+        }
+    </script>
+</body>
+</html>
